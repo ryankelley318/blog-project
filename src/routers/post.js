@@ -20,6 +20,17 @@ router.post('/posts', auth, async (req, res) => {
     }
 })
 
+//! Get all posts from newest
+router.get('/posts', async (req, res) => {
+    //try {
+        const posts = await Post.find({}, {'_id': 0, 'title':1, 'post':1, 'blogger':1, 'category':1}).sort({createdAt: -1})
+        res.send(posts)
+    //} catch (e) {
+        res.status(500).send()
+    //}
+})
+
+//! Get posts from user
 router.get('/posts/:id', async (req, res) => {
     const _id = req.params.id
     const sort = {}
@@ -44,7 +55,17 @@ router.get('/posts/:id', async (req, res) => {
     }
 })
 
+//! Get all posts from category
+router.get('/category/:category', async (req, res) => {
+    const category = req.params.category
 
+    try{
+        const posts = await Post.find({ category }).sort({createdAt: -1})
+        res.send(posts)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
 
 
 module.exports = router
